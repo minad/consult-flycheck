@@ -1,0 +1,9 @@
+#+title: consult-flycheck.el - Consult integration for Flycheck
+#+author: Daniel Mendler
+#+language: en
+
+#+html: <a href="https://melpa.org/#/consult-flycheck"><img alt="MELPA" src="https://melpa.org/packages/consult-flycheck-badge.svg"/></a>
+#+html: <a href="https://stable.melpa.org/#/consult-flycheck"><img alt="MELPA Stable" src="https://stable.melpa.org/packages/consult-flycheck-badge.svg"/></a>
+
+This package provides the =consult-flycheck= command, which integrates [[https://github.com/minad/consult][Consult]]
+with [[https://github.com/flycheck/flycheck][Flycheck]]. Take a look at the [[https://github.com/minad/consult/blob/main/README.org][Consult README]] for an extensive documentation.
