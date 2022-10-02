@@ -106,7 +106,7 @@ In contrast to `flycheck-error-level-<' sort errors first."
    :group (consult--type-group consult-flycheck--narrow)
    :narrow (consult--type-narrow consult-flycheck--narrow)
    :lookup #'consult--lookup-candidate
-   :state (consult--jump-state 'consult-preview-error)))
+   :state (consult--jump-state)))
 
 (provide 'consult-flycheck)
 ;;; consult-flycheck.el ends here
