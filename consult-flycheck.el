@@ -2,8 +2,8 @@
 
 ;; Author: Daniel Mendler and Consult contributors
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
+;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Created: 2020
-;; License: GPL-3.0-or-later
 ;; Version: 0.9
 ;; Package-Requires: ((emacs "27.1") (consult "0.32") (flycheck "32"))
 ;; Homepage: https://github.com/minad/consult
