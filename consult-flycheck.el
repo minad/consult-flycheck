@@ -7,7 +7,7 @@
 ;; Version: 0.9
 ;; Package-Requires: ((emacs "27.1") (consult "0.32") (flycheck "32"))
 ;; Homepage: https://github.com/minad/consult
-;; Keywords: languages, tools
+;; Keywords: languages, tools, completion
 
 ;; This file is not part of GNU Emacs.
 
