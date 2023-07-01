@@ -26,7 +26,7 @@
 
 ;;; Commentary:
 
-;; Provides the command `consult-flycheck'. This is an extra package,
+;; Provides the command `consult-flycheck'.  This is an extra package,
 ;; since the consult.el package only depends on Emacs core components.
 
 ;;; Code:
@@ -64,13 +64,15 @@ In contrast to `flycheck-error-level-<' sort errors first."
                          (file-name-nondirectory file)
                        (buffer-name (flycheck-error-buffer err)))
                      (number-to-string (flycheck-error-line err))
+                     (symbol-name (flycheck-error-level err))
                      err))
                   (seq-sort #'consult-flycheck--sort-predicate flycheck-current-errors)))
          (file-width (apply #'max (mapcar (lambda (x) (length (car x))) errors)))
          (line-width (apply #'max (mapcar (lambda (x) (length (cadr x))) errors)))
-         (fmt (format "%%-%ds %%-%ds %%-7s %%s (%%s)" file-width line-width)))
+         (level-width (apply #'max (mapcar (lambda (x) (length (caddr x))) errors)))
+         (fmt (format "%%%ds %%%ds %%-%ds\t%%s\t(%%s)" file-width line-width level-width)))
     (mapcar
-     (pcase-lambda (`(,file ,line ,err))
+     (pcase-lambda (`(,file ,line ,level-name ,err))
        (let ((level (flycheck-error-level err)))
          (format fmt
                  (propertize file
@@ -82,12 +84,18 @@ In contrast to `flycheck-error-level-<' sort errors first."
                                              (find-file-noselect (flycheck-error-filename err) 'nowarn)
                                            (flycheck-error-buffer err)))
                              'consult--type
-                             (pcase level
-                               ('error ?e)
-                               ('warning ?w)
+                             (pcase level-name
+                               ((rx (and (0+ nonl)
+                                         "error"
+                                         (0+ nonl)))
+                                ?e)
+                               ((rx (and (0+ nonl)
+                                         "warning"
+                                         (0+ nonl)))
+                                ?w)
                                (_ ?i)))
                  (propertize line 'face 'flycheck-error-list-line-number)
-                 (propertize (symbol-name level) 'face (flycheck-error-level-error-list-face level))
+                 (propertize level-name 'face (flycheck-error-level-error-list-face level))
                  (propertize (flycheck-error-message err) 'face 'flycheck-error-list-error-message)
                  (propertize (symbol-name (flycheck-error-checker err))
                              'face 'flycheck-error-list-checker-name))))
