@@ -96,7 +96,9 @@ In contrast to `flycheck-error-level-<' sort errors first."
                                (_ ?i)))
                  (propertize line 'face 'flycheck-error-list-line-number)
                  (propertize level-name 'face (flycheck-error-level-error-list-face level))
-                 (propertize (flycheck-error-message err) 'face 'flycheck-error-list-error-message)
+                 (propertize (subst-char-in-string ?\n ?\s
+                                                   (flycheck-error-message err))
+                             'face 'flycheck-error-list-error-message)
                  (propertize (symbol-name (flycheck-error-checker err))
                              'face 'flycheck-error-list-checker-name))))
      errors)))
