@@ -4,8 +4,8 @@
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Created: 2020
-;; Version: 0.9
-;; Package-Requires: ((emacs "27.1") (consult "0.32") (flycheck "32"))
+;; Version: 1.0
+;; Package-Requires: ((emacs "27.1") (consult "1.0") (flycheck "32"))
 ;; Homepage: https://github.com/minad/consult
 ;; Keywords: languages, tools, completion
 
