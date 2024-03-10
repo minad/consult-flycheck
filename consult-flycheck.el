@@ -4,11 +4,10 @@
 
 ;; Author: Daniel Mendler and Consult contributors
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
-;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Created: 2020
 ;; Version: 1.0
-;; Package-Requires: ((emacs "27.1") (consult "1.0") (flycheck "32"))
-;; Homepage: https://github.com/minad/consult
+;; Package-Requires: ((emacs "27.1") (consult "1.4") (flycheck "34"))
+;; Homepage: https://github.com/minad/consult-flycheck
 ;; Keywords: languages, tools, completion
 
 ;; This file is not part of GNU Emacs.
