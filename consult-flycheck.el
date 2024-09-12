@@ -6,7 +6,7 @@
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
 ;; Created: 2020
 ;; Version: 1.0
-;; Package-Requires: ((emacs "27.1") (consult "1.7") (flycheck "34"))
+;; Package-Requires: ((emacs "28.1") (consult "1.8") (flycheck "34"))
 ;; Homepage: https://github.com/minad/consult-flycheck
 ;; Keywords: languages, tools, completion
 
