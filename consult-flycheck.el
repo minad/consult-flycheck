@@ -41,17 +41,25 @@
     (?i . "Info")))
 
 (defun consult-flycheck--sort-predicate (x y)
-  "Compare X and Y first by severity, then by location.
+  "Compare X and Y by filename, severity, then by location.
 In contrast to `flycheck-error-level-<' sort errors first."
   (let* ((lx (flycheck-error-level x))
          (ly (flycheck-error-level y))
          (sx (flycheck-error-level-severity lx))
-         (sy (flycheck-error-level-severity ly)))
-    (if (= sx sy)
-        (if (string= lx ly)
-            (flycheck-error-< x y)
-          (string< lx ly))
-      (> sx sy))))
+         (sy (flycheck-error-level-severity ly))
+         (fx (if-let ((file (flycheck-error-filename x)))
+                 (file-name-nondirectory file)
+               (buffer-name (flycheck-error-buffer x))))
+         (fy (if-let ((file (flycheck-error-filename y)))
+                 (file-name-nondirectory file)
+               (buffer-name (flycheck-error-buffer y)))))
+    (if (string= fx fy)
+        (if (= sx sy)
+            (if (string= lx ly)
+                (flycheck-error-< x y)
+              (string< lx ly))
+          (> sx sy))
+      (string< fx fy))))
 
 (defun consult-flycheck--candidates ()
   "Return flycheck errors as alist."
@@ -74,34 +82,47 @@ In contrast to `flycheck-error-level-<' sort errors first."
          (fmt (format "%%%ds %%%ds %%-%ds\t%%s\t(%%s)" file-width line-width level-width)))
     (mapcar
      (pcase-lambda (`(,file ,line ,level-name ,err))
-       (let ((level (flycheck-error-level err)))
-         (format fmt
-                 (propertize file
-                             'face 'flycheck-error-list-filename
-                             'consult--candidate
-                             (set-marker (make-marker)
-                                         (flycheck-error-pos err)
-                                         (if (flycheck-error-filename err)
-                                             (find-file-noselect (flycheck-error-filename err) 'nowarn)
-                                           (flycheck-error-buffer err)))
-                             'consult--type
-                             (pcase level-name
-                               ((rx (and (0+ nonl)
-                                         "error"
-                                         (0+ nonl)))
-                                ?e)
-                               ((rx (and (0+ nonl)
-                                         "warning"
-                                         (0+ nonl)))
-                                ?w)
-                               (_ ?i)))
-                 (propertize line 'face 'flycheck-error-list-line-number)
-                 (propertize level-name 'face (flycheck-error-level-error-list-face level))
-                 (propertize (subst-char-in-string ?\n ?\s
-                                                   (flycheck-error-message err))
-                             'face 'flycheck-error-list-error-message)
-                 (propertize (symbol-name (flycheck-error-checker err))
-                             'face 'flycheck-error-list-checker-name))))
+       (let* ((level (flycheck-error-level err))
+              (filename (flycheck-error-filename err))
+              (err-copy (copy-flycheck-error err))
+              (buffer (if filename
+                          (find-file-noselect filename 'nowarn)
+                        (flycheck-error-buffer err))))
+         (when (buffer-live-p buffer)
+           ;; Update buffer in case the source of the error resides in
+           ;; a different file from where it was detected (i.e., the
+           ;; filename field of the error is different than the
+           ;; buffer).
+           (setf (flycheck-error-buffer err-copy) buffer))
+         (propertize
+          (format fmt
+                  (propertize file 'face 'flycheck-error-list-filename)
+                  (propertize line 'face 'flycheck-error-list-line-number)
+                  (propertize level-name 'face (flycheck-error-level-error-list-face level))
+                  (propertize (subst-char-in-string ?\n ?\s
+                                                    (flycheck-error-message err))
+                              'face 'flycheck-error-list-error-message)
+                  (propertize (symbol-name (flycheck-error-checker err))
+                              'face 'flycheck-error-list-checker-name))
+          'consult--candidate
+          (let* ((range (flycheck-error-region-for-mode
+                         err-copy
+                         (or flycheck-highlighting-mode 'lines)))
+                 (beg (car range))
+                 (end (cdr range)))
+            (list (set-marker (make-marker) beg buffer)
+                  (cons 0 (- end beg))))
+          'consult--type
+          (pcase level-name
+            ((rx (and (0+ nonl)
+                      "error"
+                      (0+ nonl)))
+             ?e)
+            ((rx (and (0+ nonl)
+                      "warning"
+                      (0+ nonl)))
+             ?w)
+            (_ ?i)))))
      errors)))
 
 ;;;###autoload
