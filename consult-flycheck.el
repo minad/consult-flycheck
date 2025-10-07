@@ -40,6 +40,14 @@
     (?w . "Warning")
     (?i . "Info")))
 
+(defcustom consult-flycheck-error-formatter #'flycheck-error-message
+  "Function to format flycheck error.
+
+The function should accept one argument which is a `flycheck-error' structure."
+  :type 'function
+  :group 'consult
+  :group 'flycheck)
+
 (defun consult-flycheck--sort-predicate (x y)
   "Compare X and Y by filename, severity, then by location.
 In contrast to `flycheck-error-level-<' sort errors first."
@@ -100,7 +108,7 @@ In contrast to `flycheck-error-level-<' sort errors first."
                   (propertize line 'face 'flycheck-error-list-line-number)
                   (propertize level-name 'face (flycheck-error-level-error-list-face level))
                   (propertize (subst-char-in-string ?\n ?\s
-                                                    (flycheck-error-message err))
+                                                    (funcall consult-flycheck-error-formatter err))
                               'face 'flycheck-error-list-error-message)
                   (propertize (symbol-name (flycheck-error-checker err))
                               'face 'flycheck-error-list-checker-name))
