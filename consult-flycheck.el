@@ -1,6 +1,6 @@
 ;;; consult-flycheck.el --- Provides the command `consult-flycheck' -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021-2025 Daniel Mendler
+;; Copyright (C) 2021-2026 Daniel Mendler
 
 ;; Author: Daniel Mendler and Consult contributors
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
