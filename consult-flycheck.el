@@ -47,10 +47,10 @@ In contrast to `flycheck-error-level-<' sort errors first."
          (ly (flycheck-error-level y))
          (sx (flycheck-error-level-severity lx))
          (sy (flycheck-error-level-severity ly))
-         (fx (if-let ((file (flycheck-error-filename x)))
+         (fx (if-let* ((file (flycheck-error-filename x)))
                  (file-name-nondirectory file)
                (buffer-name (flycheck-error-buffer x))))
-         (fy (if-let ((file (flycheck-error-filename y)))
+         (fy (if-let* ((file (flycheck-error-filename y)))
                  (file-name-nondirectory file)
                (buffer-name (flycheck-error-buffer y)))))
     (if (string= fx fy)
@@ -69,7 +69,7 @@ In contrast to `flycheck-error-level-<' sort errors first."
   (let* ((errors (mapcar
                   (lambda (err)
                     (list
-                     (if-let (file (flycheck-error-filename err))
+                     (if-let* ((file (flycheck-error-filename err)))
                          (file-name-nondirectory file)
                        (buffer-name (flycheck-error-buffer err)))
                      (number-to-string (flycheck-error-line err))
