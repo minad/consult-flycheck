@@ -10,3 +10,9 @@
 
 This package provides the =consult-flycheck= command, which integrates [[https://github.com/minad/consult][Consult]]
 with [[https://github.com/flycheck/flycheck][Flycheck]]. Take a look at the [[https://github.com/minad/consult/blob/main/README.org][Consult README]] for an extensive documentation.
+
+To preselect the error nearest to point, add the command to =consult-start-from-point=:
+
+#+begin_src emacs-lisp
+(setopt consult-start-from-point '(consult-flycheck))
+#+end_src

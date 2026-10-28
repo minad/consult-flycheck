@@ -6,7 +6,7 @@
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
 ;; Created: 2020
 ;; Version: 1.2
-;; Package-Requires: ((emacs "29.1") (consult "3.5") (flycheck "35"))
+;; Package-Requires: ((emacs "29.1") (consult "3.11") (flycheck "35"))
 ;; URL: https://github.com/minad/consult-flycheck
 ;; Keywords: languages, tools, completion
 
@@ -125,19 +125,26 @@ In contrast to `flycheck-error-level-<' sort errors first."
 
 ;;;###autoload
 (defun consult-flycheck ()
-  "Jump to flycheck error."
+  "Jump to flycheck error.
+Add this command to `consult-start-from-point' to preselect the error
+nearest to point."
   (interactive)
-  (consult--read
-   (consult--with-increased-gc (consult-flycheck--candidates))
-   :prompt "Flycheck error: "
-   :category 'consult-flycheck-error
-   :history t ;; disable history
-   :require-match t
-   :sort nil
-   :group (consult--type-group consult-flycheck--narrow)
-   :narrow (consult--type-narrow consult-flycheck--narrow)
-   :lookup #'consult--lookup-candidate
-   :state (consult--jump-state)))
+  (let ((candidates
+         (consult--start-from-point
+          (lambda (cand) (car (get-text-property 0 'consult--candidate cand)))
+          (consult--with-increased-gc (consult-flycheck--candidates)))))
+    (consult--read
+     candidates
+     :prompt "Flycheck error: "
+     :category 'consult-flycheck-error
+     :default (car candidates)
+     :history t ;; disable history
+     :require-match t
+     :sort nil
+     :group (consult--type-group consult-flycheck--narrow)
+     :narrow (consult--type-narrow consult-flycheck--narrow)
+     :lookup #'consult--lookup-candidate
+     :state (consult--jump-state))))
 
 (provide 'consult-flycheck)
 ;;; consult-flycheck.el ends here
